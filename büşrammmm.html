@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8" />
+<title>Arama Oyunu</title>
+<style>
+    body {
+        background: #ffcce6;
+        font-family: Arial, sans-serif;
+        text-align: center;
+        margin-top: 100px;
+        overflow: hidden;
+    }
+
+    #startBtn {
+        font-size: 22px;
+        padding: 15px 30px;
+        border: 4px solid #ff66b3;
+        box-shadow: 0 0 10px #ff99cc;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    #yesBtn, #noBtn {
+        font-size: 22px;
+        padding: 15px 30px;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: 0.3s;
+        display: none;
+    }
+
+    #yesBtn {
+        background: green;
+        color: white;
+    }
+
+    #noBtn {
+        background: red;
+        color: white;
+    }
+
+    #hearts, #sparkles {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        overflow: hidden;
+        display: none;
+    }
+
+    .heart, .sparkle {
+        position: absolute;
+        font-size: 30px;
+        animation: fly 2s linear infinite;
+    }
+
+    @keyframes fly {
+        0% { transform: translateY(0) scale(1); opacity: 1; }
+        100% { transform: translateY(-500px) scale(1.8); opacity: 0; }
+    }
+
+    #msg {
+        margin-top: 40px;
+        font-size: 30px;
+        font-weight: bold;
+        display: none;
+        color: #d63384;
+    }
+
+    .bgHeart {
+        position: fixed;
+        font-size: 40px;
+        opacity: 0.25;
+        animation: floatUp 8s linear infinite;
+        pointer-events: none;
+    }
+
+    @keyframes floatUp {
+        0% { transform: translateY(50vh) scale(1); opacity: 0.2; }
+        100% { transform: translateY(-50vh) scale(1.6); opacity: 0; }
+    }
+</style>
+</head>
+<body>
+
+<!-- Romantik piyano müziği -->
+<audio id="song" src="https://freemusicarchive.org/track/romantic-piano/download" type="audio/mpeg"></audio>
+
+<div class="bgHeart" style="left:10vw; animation-delay:0s;">💗</div>
+<div class="bgHeart" style="left:40vw; animation-delay:2s;">💖</div>
+<div class="bgHeart" style="left:70vw; animation-delay:4s;">💕</div>
+<div class="bgHeart" style="left:85vw; animation-delay:1s;">💞</div>
+
+<button id="startBtn">Beni arar mısın?</button>
+<br><br>
+<button id="yesBtn">Hemen arıyorum</button>
+<button id="noBtn">Aramıyorum</button>
+
+<div id="hearts"></div>
+<div id="sparkles"></div>
+<div id="msg">Arayacağını biliyordum ❤️</div>
+
+<script>
+let yesBtn = document.getElementById("yesBtn");
+let noBtn = document.getElementById("noBtn");
+let startBtn = document.getElementById("startBtn");
+let hearts = document.getElementById("hearts");
+let sparkles = document.getElementById("sparkles");
+let msg = document.getElementById("msg");
+let song = document.getElementById("song");
+
+startBtn.onclick = () => {
+    startBtn.style.display = "none";
+    yesBtn.style.display = "inline-block";
+    noBtn.style.display = "inline-block";
+};
+
+noBtn.onclick = () => {
+    let size = yesBtn.offsetWidth;
+    let newSize = size * 1.4;
+
+    yesBtn.style.width = newSize + "px";
+    yesBtn.style.height = (yesBtn.offsetHeight * 1.4) + "px";
+    yesBtn.style.fontSize = (parseFloat(window.getComputedStyle(yesBtn).fontSize) * 1.2) + "px";
+
+    let currentMargin = parseInt(window.getComputedStyle(noBtn).marginLeft) || 0;
+    noBtn.style.marginLeft = (currentMargin + 40) + "px";
+
+    if (newSize > window.innerWidth * 0.9) {
+        yesBtn.style.width = "100vw";
+        yesBtn.style.height = "100vh";
+        yesBtn.style.position = "fixed";
+        yesBtn.style.top = 0;
+        yesBtn.style.left = 0;
+        yesBtn.style.borderRadius = 0;
+    }
+};
+
+yesBtn.onclick = () => {
+    startBtn.style.display = 'none';
+    yesBtn.style.display = 'none';
+    noBtn.style.display = 'none';
+
+    // Romantik müzik çal
+    song.play().catch(e => console.log('Ses oynatılamadı:', e));
+
+    // Kalpler uçuşsun
+    hearts.style.display = "block";
+    for (let i = 0; i < 30; i++) {
+        let h = document.createElement("div");
+        h.className = "heart";
+        h.innerHTML = "❤️";
+        h.style.left = Math.random() * 100 + "vw";
+        h.style.top = "80vh";
+        hearts.appendChild(h);
+        setTimeout(() => h.remove(), 2000);
+    }
+
+    // Parlayan ışıklar (civ civ)
+    sparkles.style.display = "block";
+    for (let i = 0; i < 20; i++) {
+        let s = document.createElement("div");
+        s.className = "sparkle";
+        s.innerHTML = "✨";
+        s.style.left = Math.random() * 100 + "vw";
+        s.style.top = Math.random() * 100 + "vh";
+        s.style.fontSize = (10 + Math.random() * 20) + "px";
+        sparkles.appendChild(s);
+        setTimeout(() => s.remove(), 2000 + Math.random() * 2000);
+    }
+
+    msg.style.display = "block";
+};
+</script>
+
+</body>
+</html>
